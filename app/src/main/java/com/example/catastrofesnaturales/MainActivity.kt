@@ -19,8 +19,8 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.widget.LinearLayout
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 class MainActivity : AppCompatActivity() {
     private lateinit var cameraManager: CameraManager

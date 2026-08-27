@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "394490477480",
+    "project_id": "tp1-catastrofesnaturales",
+    "storage_bucket": "tp1-catastrofesnaturales.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394490477480:android:6b2e3aaa88046460ba7b9d",
+        "android_client_info": {
+          "package_name": "com.example.catastrofesnaturales"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsrFafcNqhQf41c8IeylIh-IAhAys8pZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
