@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/background_gradient"
+    android:textColor="#FFFFFF"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,25 +10,33 @@
     tools:context=".MainActivity">
 
     <Button
+        android:backgroundTint="#FF7E67"
+        android:textColor="#FFFFFF"
         android:id="@+id/btn_flash"
-        android:layout_width="143dp"
+        android:layout_width="200dp"
         android:layout_height="155dp"
-        android:text="FLASH"
+        app:icon="@drawable/ic_linterna"
+        app:iconTint="#FFFFFF"
+        app:iconGravity="textStart"
+        app:iconSize="80dp"
+        app:iconPadding="0dp"
+        android:padding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.5"
+        android:contentDescription="Botón para encender la linterna"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_clima"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="#2196F3"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="24dp"
+        app:cardBackgroundColor="#2A2A3E"
+        app:cardElevation="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -34,15 +44,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="24dp">
 
             <TextView
                 android:id="@+id/tv_ciudad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="General Pico"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:text="GENERAL PICO"
+                android:textColor="#FF7E67"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -53,18 +65,18 @@
                 android:layout_height="wrap_content"
                 android:text="--°C"
                 android:textColor="#FFFFFF"
-                android:textSize="48sp"
+                android:textSize="56sp"
                 android:textStyle="bold"
+                android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_ciudad"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="8dp" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/tv_icono_clima"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="☀️"
-                android:textSize="48sp"
+                android:textSize="56sp"
                 app:layout_constraintTop_toTopOf="@id/tv_temperatura"
                 app:layout_constraintBottom_toBottomOf="@id/tv_temperatura"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -73,16 +85,28 @@
                 android:id="@+id/tv_detalles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Viento: -- km/h | Humedad: --%"
-                android:textColor="#E0E0E0"
+                android:text="Viento: -- km/h  |  Humedad: --%"
+                android:textColor="#A0A0B5"
                 android:textSize="14sp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_temperatura"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="12dp" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
+    <Button
+        android:backgroundTint="#3B3B54"
+        android:textColor="#FF7E67"
+        android:id="@+id/btn_ir_mapa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="VER MAPA Y UBICACIÓN"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_clima" />
 
     <!-- Botón principal que abre/cierra la lista -->
 
@@ -90,33 +114,36 @@
 
     <Button
         android:id="@+id/btn_desplegar_emergencias"
-        android:layout_width="95dp"
-        android:layout_height="71dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:text="emergencia"
+        android:layout_marginTop="480dp"
+        android:backgroundTint="#3B3B54"
+        app:icon="@drawable/icono_telefono_asistencia"
+        app:iconTint="#FF7E67"
+        app:iconSize="48dp"
+        android:padding="16dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        app:cornerRadius="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.079"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="488dp"
-
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="480dp"
+        android:contentDescription="Botón de emergencias" />
 
-        />
-
-    <LinearLayout
-        android:id="@+id/contenedor_emergencias"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
+    <!-- Botón único que abrirá el menú de grabaciones -->
+    <Button
+        android:id="@+id/btn_menu_grabacion"
+        android:layout_width="115dp"
+        android:layout_height="78dp"
         android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/btn_desplegar_emergencias"
+        android:text="🎥"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Aquí aparecerán los botones mágicamente desde Kotlin -->
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/btn_flash"
+        app:layout_constraintVertical_bias="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,10 +37,16 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.fragment)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
     implementation("com.google.firebase:firebase-firestore")
+
+    // Librería oficial de Google Maps
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+// Librería para obtener la ubicación (GPS)
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

@@ -22,6 +22,17 @@ import android.widget.LinearLayout
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
+import android.widget.PopupMenu
+import android.provider.MediaStore
+import android.widget.Toast
+
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
+import android.content.res.ColorStateList
+
 class MainActivity : AppCompatActivity() {
     private lateinit var cameraManager: CameraManager
     private var cameraId: String = ""
@@ -31,10 +42,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+        // Verificamos si ya tenemos permiso para la cámara
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            // Si no lo tenemos, hacemos que salte el cartelito preguntando por la cámara y el micrófono
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO),
+                100
+            )
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        val btnIrMapa = findViewById<Button>(R.id.btn_ir_mapa)
+        btnIrMapa.setOnClickListener {
+            val intent = Intent(this, UbicacionActivity::class.java)
+            startActivity(intent)
         }
 
         val btn_flash = findViewById<Button>(R.id.btn_flash)
@@ -52,9 +78,9 @@ class MainActivity : AppCompatActivity() {
                 cameraManager.setTorchMode(cameraId, isFlashOn)
 
                 if(isFlashOn){
-                    btn_flash.setBackgroundColor(Color.YELLOW)
+                    btn_flash.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFFF00"))
                 }else{
-                    btn_flash.setBackgroundColor(Color.GRAY)
+                    btn_flash.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FF7E67"))
                 }
             }catch(e: Exception){
                 e.printStackTrace()
@@ -104,19 +130,19 @@ class MainActivity : AppCompatActivity() {
         }.start()
 
         val btnDesplegar = findViewById<Button>(R.id.btn_desplegar_emergencias)
-        val contenedorEmergencias = findViewById<LinearLayout>(R.id.contenedor_emergencias)
+        // val contenedorEmergencias = findViewById<LinearLayout>(R.id.contenedor_emergencias)
         val db = Firebase.firestore
 
 
-        btnDesplegar.setOnClickListener {
+        /*btnDesplegar.setOnClickListener {
             if (contenedorEmergencias.visibility == View.GONE) {
                 contenedorEmergencias.visibility = View.VISIBLE
                 btnDesplegar.text = "OCULTAR NÚMEROS" // Cambiamos el texto
             } else {
                 contenedorEmergencias.visibility = View.GONE
-                btnDesplegar.text = "🚨 NÚMEROS DE EMERGENCIA" // Volvemos al original
+                btnDesplegar.text = "NÚMEROS DE EMERGENCIA" // Volvemos al original
             }
-        }
+        }*/
 
         db.collection("emergencias").addSnapshotListener { snapshot, error ->
             if (error != null) {
@@ -125,7 +151,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (snapshot != null) {
-                contenedorEmergencias.removeAllViews()
+                //contenedorEmergencias.removeAllViews()
 
                 for (documento in snapshot.documents) {
                     val nombre = documento.getString("nombre") ?: "Sin nombre"
@@ -140,9 +166,52 @@ class MainActivity : AppCompatActivity() {
                             startActivity(intent)
                         }
                     }
-                    contenedorEmergencias.addView(botonLlamar)
+                    //contenedorEmergencias.addView(botonLlamar)
                 }
             }
+        }
+
+        val btnMenuGrabacion = findViewById<Button>(R.id.btn_menu_grabacion)
+
+        btnMenuGrabacion.setOnClickListener { vistaBoton ->
+            // 1. Creamos el menú emergente anclado a nuestro botón
+            val popupMenu = PopupMenu(this, vistaBoton)
+
+            // 2. Agregamos las opciones al menú
+            popupMenu.menu.add("📹 Grabar Video Frontal (Trasera)")
+            popupMenu.menu.add("🤳 Grabar Video Selfi")
+            // ¡Aquí luego agregaremos la de Audio!
+
+            // 3. Le decimos qué hacer cuando el usuario toque una opción
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.title) {
+                    "📹 Grabar Video Frontal (Trasera)" -> {
+                        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+                        intent.putExtra("android.intent.extras.CAMERA_FACING", 0)
+                        try {
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            Toast.makeText(this, "Error al abrir cámara: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
+                        true
+                    }
+                    "🤳 Grabar Video Selfi" -> {
+                        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+                        intent.putExtra("android.intent.extras.CAMERA_FACING", 1)
+                        intent.putExtra("android.intent.extras.USE_FRONT_CAMERA", true)
+                        try {
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            Toast.makeText(this, "Error al abrir cámara: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            // 4. Mostramos el menú en pantalla
+            popupMenu.show()
         }
 
     }
