@@ -32,6 +32,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 import android.content.res.ColorStateList
+import android.app.Dialog
+import android.graphics.drawable.ColorDrawable
+import android.view.WindowManager
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var cameraManager: CameraManager
@@ -56,6 +67,24 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Ocultar la barra de estado del sistema (reloj/batería del sistema)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            hide(WindowInsetsCompat.Type.statusBars())
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        // Reloj en tiempo real para la barra superior propia
+        val tvRelojCustom = findViewById<TextView>(R.id.tv_reloj_custom)
+        val handlerReloj = Handler(Looper.getMainLooper())
+        val runnableReloj = object : Runnable {
+            override fun run() {
+                val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                tvRelojCustom?.text = sdf.format(Date())
+                handlerReloj.postDelayed(this, 1000)
+            }
+        }
+        handlerReloj.post(runnableReloj)
 
         val btnIrMapa = findViewById<Button>(R.id.btn_ir_mapa)
         btnIrMapa.setOnClickListener {
@@ -173,45 +202,45 @@ class MainActivity : AppCompatActivity() {
 
         val btnMenuGrabacion = findViewById<Button>(R.id.btn_menu_grabacion)
 
-        btnMenuGrabacion.setOnClickListener { vistaBoton ->
-            // 1. Creamos el menú emergente anclado a nuestro botón
-            val popupMenu = PopupMenu(this, vistaBoton)
+        btnMenuGrabacion.setOnClickListener {
+            // 1. Creamos el diálogo personalizado
+            val dialog = Dialog(this)
+            dialog.setContentView(R.layout.dialog_menu_grabacion)
 
-            // 2. Agregamos las opciones al menú
-            popupMenu.menu.add("📹 Grabar Video Frontal (Trasera)")
-            popupMenu.menu.add("🤳 Grabar Video Selfi")
-            // ¡Aquí luego agregaremos la de Audio!
+            // 2. Fondo transparente para respetar los bordes redondeados del CardView
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            // Oscurecer el resto de la pantalla
+            dialog.window?.setDimAmount(0.75f)
 
-            // 3. Le decimos qué hacer cuando el usuario toque una opción
-            popupMenu.setOnMenuItemClickListener { item ->
-                when (item.title) {
-                    "📹 Grabar Video Frontal (Trasera)" -> {
-                        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-                        intent.putExtra("android.intent.extras.CAMERA_FACING", 0)
-                        try {
-                            startActivity(intent)
-                        } catch (e: Exception) {
-                            Toast.makeText(this, "Error al abrir cámara: ${e.message}", Toast.LENGTH_LONG).show()
-                        }
-                        true
-                    }
-                    "🤳 Grabar Video Selfi" -> {
-                        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-                        intent.putExtra("android.intent.extras.CAMERA_FACING", 1)
-                        intent.putExtra("android.intent.extras.USE_FRONT_CAMERA", true)
-                        try {
-                            startActivity(intent)
-                        } catch (e: Exception) {
-                            Toast.makeText(this, "Error al abrir cámara: ${e.message}", Toast.LENGTH_LONG).show()
-                        }
-                        true
-                    }
-                    else -> false
-                }
+            // 3. Si el dispositivo soporta desenfoque de fondo (Android 12+ / API 31+)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                dialog.window?.attributes?.blurBehindRadius = 30
             }
 
-            // 4. Mostramos el menú en pantalla
-            popupMenu.show()
+            val btnTrasera = dialog.findViewById<Button>(R.id.btn_grabar_trasera)
+            val btnSelfie = dialog.findViewById<Button>(R.id.btn_grabar_selfie)
+            val btnCerrar = dialog.findViewById<Button>(R.id.btn_cerrar_dialogo)
+
+            btnTrasera.setOnClickListener {
+                dialog.dismiss()
+                val intent = Intent(this, GrabacionActivity::class.java)
+                intent.putExtra("USAR_CAMARA_FRONTAL", false)
+                startActivity(intent)
+            }
+
+            btnSelfie.setOnClickListener {
+                dialog.dismiss()
+                val intent = Intent(this, GrabacionActivity::class.java)
+                intent.putExtra("USAR_CAMARA_FRONTAL", true)
+                startActivity(intent)
+            }
+
+            btnCerrar.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
         }
 
     }

@@ -47,6 +47,14 @@ dependencies {
 
     // Librería oficial de Google Maps
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-// Librería para obtener la ubicación (GPS)
+    // Librería para obtener la ubicación (GPS)
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // CameraX para grabación directa (frontal y trasera)
+    val cameraxVersion = "1.3.4"
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-video:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
 }
